@@ -1,0 +1,46 @@
+[build-system]
+requires = ["setuptools>=64", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "simup"
+version = "0.1.0"
+description = "simup — my sim is up. A simple CLI for deploying MuJoCo simulation environments on Azure."
+readme = "README.md"
+requires-python = ">=3.10"
+license = {text = "MIT"}
+dependencies = [
+    "click>=8.0",
+    "azure-mgmt-compute>=30.0",
+    "azure-mgmt-network>=25.0",
+    "azure-mgmt-resource>=23.0",
+    "azure-identity>=1.15",
+    "rich>=13.0",
+    "pyyaml>=6.0",
+]
+
+[project.scripts]
+simup = "simup.cli:cli"
+
+[project.optional-dependencies]
+dev = ["pytest", "ruff", "mypy"]
+
+[tool.setuptools.packages.find]
+include = ["simup*"]
+
+[tool.mypy]
+strict = true
+warn_return_any = true
+warn_unused_ignores = false
+disallow_untyped_defs = true
+disallow_incomplete_defs = true
+
+[[tool.mypy.overrides]]
+module = ["mujoco.*", "mjx.*", "dm_control.*", "mediapy.*", "jax.*", "jax.numpy.*", "azure.*", "yaml"]
+ignore_missing_imports = true
+
+[[tool.mypy.overrides]]
+module = "simup.azure_vm"
+disallow_any_expr = false
+warn_return_any = false
+disallow_untyped_calls = false
